@@ -1,0 +1,19 @@
+DROP TABLE IF EXISTS #DateSpill
+
+DECLARE @Start DATE = '2024-01-01';  -- Set the date to spill from
+DECLARE @End DATE = GETDATE() ;      -- Set the date to end spilling
+
+;WITH DateRange AS (
+    SELECT @Start AS DateSpill
+    UNION ALL
+    SELECT DATEADD(day,1,DateSpill) as DateSpill
+    FROM DateRange
+    WHERE DATEADD(day,1,DateSpill) <=  @End
+)
+SELECT DateSpill
+INTO #DateSpill
+FROM DateRange
+OPTION (MAXRECURSION 0)
+
+SELECT *
+FROM #DateSpill
