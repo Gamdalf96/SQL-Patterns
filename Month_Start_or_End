@@ -1,0 +1,9 @@
+/*------------------------------------------------------ 
+Variables create the start and end of the current month
+------------------------------------------------------*/
+
+DECLARE @StartOfMonth as date
+DECLARE @EndOfMonth as date
+
+SET @StartOfMonth =	DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0)
+SET @EndOfMonth =		DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE()), -1)
