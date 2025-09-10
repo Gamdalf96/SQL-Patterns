@@ -1,0 +1,33 @@
+/* SQL NetworkDays
+Transform dates into decimal numbers (Temp1)
+Subtract Start Date from End Date to obtain Duration (Temp1)
+Pattern to mathematically remove weekend days (Temp2)
+*/
+
+DROP TABLE IF EXISTS #Temp1, #Temp2;
+
+--TABLE 1
+SELECT
+ID,
+StartDate,
+EndDate,
+CONVERT(Decimal (12, 4), StartDate) [Start_INT],
+CONVERT(Decimal (12, 4), EndDate) [End_INT],
+( CONVERT(Decimal (12, 4), EndDate) - CONVERT(Decimal (12, 4), StartDate) ) [Duration]
+INTO #Temp1
+FROM Table;
+
+
+--TABLE 2
+SELECT 
+ID,
+StartDate,
+EndDate,
+Start_Int,
+End_Int,
+Duration,
+(	(Duration)
+	- (DATEDIFF(wk, StartDate, EndDate) * 2)
+	- (CASE WHEN DATENAME(dw, StartDate) = 'Sunday' THEN 1 ELSE 0 END)
+	- (CASE WHEN DATENAME(dw, EndDate) = 'Saturday' THEN 1 ELSE 0 END) ) [NetworkDays]
+FROM #Temp1;
